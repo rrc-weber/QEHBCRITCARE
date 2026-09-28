@@ -1,0 +1,944 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>ICU Procedure Note</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+:root{
+  color-scheme:light;
+  --bg:#EDF2F2; --surface:#FFFFFF; --surface2:#F4F8F8; --ink:#10262B; --muted:#54686C;
+  --line:#D5E0E1; --line-strong:#AFC0C2; --accent:#0B6E70; --on-accent:#FFFFFF; --accent-soft:#DCEFEE;
+  --warn:#7A4800; --warn-bg:#FFF0D2; --warn-line:#EBCB8B; --ok:#1B6B3A; --ok-bg:#DDF2E4;
+  --font:'IBM Plex Sans',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  --mono:'IBM Plex Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#0C1a1d; --surface:#132327; --surface2:#182C31; --ink:#E3EEEE; --muted:#92A9AC;
+    --line:#263D43; --line-strong:#3A565D; --accent:#4CC2C0; --on-accent:#06282A; --accent-soft:#1B3C3E;
+    --warn:#F0C673; --warn-bg:#33290F; --warn-line:#5A4718; --ok:#7FD6A0; --ok-bg:#163223;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#0C1a1d; --surface:#132327; --surface2:#182C31; --ink:#E3EEEE; --muted:#92A9AC;
+  --line:#263D43; --line-strong:#3A565D; --accent:#4CC2C0; --on-accent:#06282A; --accent-soft:#1B3C3E;
+  --warn:#F0C673; --warn-bg:#33290F; --warn-line:#5A4718; --ok:#7FD6A0; --ok-bg:#163223;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--font);font-size:15px;line-height:1.5}
+.app{max-width:1200px;margin-inline:auto;padding-inline:16px;padding-block:28px 56px}
+.eyebrow{font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--accent)}
+h1{font-size:30px;line-height:1.15;font-weight:600;margin:4px 0 8px;letter-spacing:-.01em;text-wrap:balance}
+.lede{margin:0;color:var(--muted);max-width:64ch}
+.notice{margin-top:16px;padding:10px 14px;border:1px solid var(--warn-line);background:var(--warn-bg);color:var(--warn);border-radius:8px;font-size:13.5px}
+.guideline-link{margin-top:10px;font-size:13px;color:var(--muted)}
+.guideline-link a{color:var(--accent);text-decoration:underline;text-underline-offset:2px}
+.picker{display:flex;flex-wrap:wrap;gap:18px 32px;margin-block:22px 20px}
+.pgroup{display:flex;flex-direction:column;gap:6px}
+.plabel{font-size:11.5px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.pbtns{display:flex;flex-wrap:wrap;gap:8px}
+.pick{font:inherit;font-weight:500;padding:8px 14px;border:1px solid var(--line-strong);background:var(--surface);color:var(--ink);border-radius:8px;cursor:pointer}
+.pick:hover{border-color:var(--accent)}
+.pick[aria-pressed="true"]{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 410px;gap:24px;align-items:start}
+.form{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding-inline:24px}
+.sec{padding-block:20px}
+.sec + .sec{border-top:1px solid var(--line)}
+.sec h2{margin:0 0 14px;font-size:12px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:16px}
+.fld{grid-column:span 6;min-width:0}
+.w-half{grid-column:span 3}
+.w-third{grid-column:span 2}
+label,.lbl{display:block;font-size:13px;font-weight:500;margin-bottom:5px}
+.lblrow{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:5px}
+.lblrow .lbl{margin:0}
+.hint{font-weight:400;color:var(--muted)}
+.opt-hint{flex-basis:100%;font-size:12.5px;margin-top:-4px}
+input[type=text],input[type=number],input[type=date],input[type=time],select,textarea{
+  width:100%;font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line-strong);
+  border-radius:6px;padding:8px 10px;min-height:40px}
+textarea{resize:vertical}
+::placeholder{color:var(--muted);opacity:.8}
+:is(input,select,textarea,button):focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font:inherit;font-size:13.5px;padding:7px 12px;border:1px solid var(--line-strong);background:var(--surface);color:var(--ink);border-radius:6px;cursor:pointer}
+.chip:hover{border-color:var(--accent)}
+.chip[aria-pressed="true"]{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+.chip[aria-pressed="true"]::before{content:"\2713\00a0"}
+.linkbtn{font:inherit;font-size:12.5px;color:var(--accent);background:none;border:0;padding:0;cursor:pointer;text-decoration:underline;text-underline-offset:2px}
+.chk{display:flex;gap:10px;align-items:flex-start;cursor:pointer;font-weight:400;font-size:14px;margin:0}
+.chk input{width:18px;height:18px;margin:2px 0 0;accent-color:var(--accent);flex:none}
+.out{position:sticky;top:calc(env(safe-area-inset-top,0px) + 16px);display:flex;flex-direction:column;gap:12px;
+  background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px;
+  max-height:calc(100vh - 32px);overflow:auto}
+.outhead{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.outhead h2{margin:0;font-size:16px;font-weight:600}
+.seg{display:flex;border:1px solid var(--line-strong);border-radius:7px;overflow:hidden}
+.seg button{font:inherit;font-size:13px;padding:6px 12px;border:0;background:var(--surface);color:var(--ink);cursor:pointer}
+.seg button + button{border-left:1px solid var(--line-strong)}
+.seg button[aria-checked="true"]{background:var(--accent-soft);color:var(--ink);font-weight:600}
+.gaps{font-size:13px;padding:8px 12px;border-radius:7px;background:var(--warn-bg);color:var(--warn);border:1px solid var(--warn-line)}
+.gaps.done{background:var(--ok-bg);color:var(--ok);border-color:transparent}
+#note{flex:1;min-height:320px;font-family:var(--mono);font-size:12.8px;line-height:1.6;background:var(--surface2);border-color:var(--line);white-space:pre-wrap}
+.actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.btn{font:inherit;font-weight:600;padding:9px 16px;border-radius:7px;border:1px solid var(--line-strong);background:var(--surface);color:var(--ink);cursor:pointer}
+.btn.primary{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.status{font-size:13px;color:var(--muted);min-height:1.4em}
+.info{padding:10px 14px;border-radius:8px;border:1px solid var(--warn-line);background:var(--warn-bg);color:var(--ink);font-size:13.5px}
+.info strong{color:var(--warn)}
+.stopbox{border:2px solid #B3261E;background:#FCE8E6;color:#5C0B06;border-radius:10px;padding:16px 18px}
+.stopbox .stoptitle{font-weight:700;font-size:18px;color:#B3261E;margin-bottom:6px;text-transform:uppercase;letter-spacing:.03em}
+.stopbox p{margin:0 0 8px;font-size:15px;font-weight:600;line-height:1.45}
+.stopbox .stopsub{font-weight:400;font-size:13.5px;margin:0}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .stopbox{background:#3A1311;color:#F6D5D2;border-color:#E0645A}:root:not([data-theme="light"]) .stopbox .stoptitle{color:#F28B82}}
+:root[data-theme="dark"] .stopbox{background:#3A1311;color:#F6D5D2;border-color:#E0645A}
+:root[data-theme="dark"] .stopbox .stoptitle{color:#F28B82}
+.foot{margin-top:28px;font-size:12.5px;color:var(--muted);max-width:70ch}
+@media (max-width:960px){
+  .layout{grid-template-columns:minmax(0,1fr)}
+  .out{position:static;max-height:none}
+}
+@media (max-width:640px){
+  .w-half,.w-third{grid-column:span 6}
+  .form{padding-inline:16px}
+  h1{font-size:26px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<div class="app">
+  <header>
+    <div class="eyebrow">Critical Care</div>
+    <h1>ICU procedure note</h1>
+    <p class="lede">Choose a procedure, fill in the applicable information, then copy the text into the relevant procedure note on PICS. Fields you leave blank are left out of the note.</p>
+    <div class="notice"><strong>Text only.</strong> Nothing you enter is saved or sent anywhere. Do not type patient names, NHS numbers or dates of birth. Record the text in PICS via the correct patient record &gt; Procedures &gt; Performed &gt; select procedure. It is essential that all invasive procedures are recorded accurately.</div>
+    <p class="guideline-link">Proformas and LocSSIPs: <a href="https://qehb.sharepoint.com/sites/int-QEHBCriticalCare/SitePages/Proformas-and-LocSSIPs.aspx" target="_blank" rel="noopener">Proformas and LocSSIPs</a> &middot; Critical Care Guidelines: <a href="https://qehb.sharepoint.com/sites/int-QEHBCriticalCare/SitePages/Guidelines.aspx" target="_blank" rel="noopener">Guidelines</a> (Trust SharePoint site — sign-in required).</p>
+  </header>
+
+  <div class="picker" id="picker"></div>
+
+  <div class="layout">
+    <form class="form" id="form" autocomplete="off"></form>
+
+    <aside class="out" aria-label="Note preview">
+      <div class="outhead">
+        <h2>Note for the record</h2>
+        <div class="seg" role="radiogroup" aria-label="Note style" id="modes">
+          <button type="button" role="radio" aria-checked="false" data-m="narrative">Narrative</button>
+          <button type="button" role="radio" aria-checked="true" data-m="structured">Structured</button>
+        </div>
+      </div>
+      <div class="gaps" id="gaps"></div>
+      <textarea id="note" readonly aria-label="Generated procedure note" placeholder="Your note appears here as you fill in the form."></textarea>
+      <div class="actions">
+        <button type="button" class="btn primary" id="copy" disabled>Copy note</button>
+        <button type="button" class="btn" id="reset">New note</button>
+        <button type="button" class="linkbtn" id="example">Load example</button>
+      </div>
+      <div class="status" id="status" role="status" aria-live="polite"></div>
+    </aside>
+  </div>
+
+  <p class="foot">Options are a starting point. Check them against your unit's local safety standards for invasive procedures (LocSSIPs) before relying on them.</p>
+</div>
+
+<script>
+(function(){
+'use strict';
+var $=function(s){return document.querySelector(s)};
+var esc=function(s){return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})};
+var has=function(v){return Array.isArray(v)?v.length>0:(v!==undefined&&v!==null&&v!==''&&v!==false)};
+var low=function(s){
+  if(!s)return s;
+  var w=s.split(/[\s,]/)[0];
+  return (/^[A-Z][A-Z0-9]/.test(w)||/[a-z][A-Z]/.test(w)||/^(Seldinger|Macintosh)$/.test(w))?s:s.charAt(0).toLowerCase()+s.slice(1);
+};
+var art=function(s){return /^(8|11|18|[aeiou])/i.test(s)?'An':'A'};
+var aa=function(s){return art(s).toLowerCase()+' '+s};
+var list=function(a){
+  if(a.length<2)return a[0]||'';
+  if(a.some(function(x){return /,| and /.test(x)}))return a.join('; ');
+  return a.slice(0,-1).join(', ')+' and '+a[a.length-1];
+};
+var sentences=function(a){
+  return a.filter(Boolean).map(function(x){return String(x).replace(/[.\s]+$/,'')+'.'}).join(' ');
+};
+function F(k,l,t,x){var o={k:k,l:l,t:t};for(var i in (x||{}))o[i]=x[i];return o}
+
+/* ---------- shared option lists ---------- */
+var GRADES=['Consultant','SAS or specialty doctor','Clinical fellow','ST6 or above','ST3 to ST5','Core or ACCS trainee','Advanced critical care practitioner','Other'];
+var SUPERV=['Direct (supervisor present)','Indirect (supervisor immediately available)','Distant (supervisor contactable)','Unsupervised'];
+var CONSENT=['Verbal consent','Written consent','Two-doctor consent (lacked capacity)','Best interests decision (lacked capacity)'];
+var YN=['Yes','No'];
+var YNU=['Yes','No','Unable to assess'];
+var RLMO=['Right','Left','Midline','Other'];
+var RL=['Right','Left'];
+var IMG=['Requested','Reviewed, satisfactory','Reviewed, position adjusted','Not required'];
+var USQ=['Good','Acceptable','Poor'];
+var VENT=['None','IPPV','PSV','Spontaneous','BIPAP','CPAP','High-flow nasal oxygen'];
+var ID='Patient identity confirmed',LOC='LocSSIP completed',COAG='Coagulation status checked',ALG='Allergies noted',EMG='Emergency equipment available';
+var PRE_INV=[ID,LOC,COAG,ALG,EMG];
+var STERILE=['Sterile gloves and gown worn','Hat and mask worn','Sterile drapes applied'];
+var PPE=['PPE worn'];
+var ANAES=['Local anaesthetic, analgesia or sedation','e.g. 1% lidocaine 5 mL'];
+var GUIDE_NM={'Real-time ultrasound':'real-time ultrasound guidance','Landmark technique':'a landmark technique'};
+var US=function(){return F('us','Ultrasound guided','chip',{o:YN})};
+var SAMPLE_PH='Ticked items are listed in the note';
+
+/* ---------- procedure configuration ---------- */
+var PR={
+cvc:{name:'Central line',group:'Vascular access',title:'Central venous catheter insertion',
+  prep:PRE_INV,opprep:STERILE,anaes:ANAES,
+  ind:['Vasopressor or inotrope infusion','Poor peripheral access','Parenteral nutrition','Central venous pressure monitoring'],indPh:'e.g. Noradrenaline requirement',
+  consReq:1,urgReq:1,
+  spec:[
+    F('site','Site','chip',{req:1,o:['Right IJV','Left IJV','Right subclavian','Left subclavian','Right femoral','Left femoral']}),
+    F('device','Catheter','chip',{o:['Single lumen CVC','Quad lumen CVC','5 lumen CVC','Tunnelled CVC','Introducer sheath','PICC','Other']}),
+    F('size','Size and length','text',{w:'half',ph:'e.g. 7 Fr, 16 cm'}),
+    F('lot','Catheter lot number','text',{w:'half',ph:'e.g. AB12345'}),
+    F('guide','Guidance','chip',{o:['Real-time ultrasound','Landmark technique'],nm:GUIDE_NM}),
+    F('confirm','Venous placement confirmed by','multi',{o:['Ultrasound view of wire in vein','Pressure transduction','Blood gas']}),
+    F('checks','Checks on completion','multi',{all:1,o:['Guidewire removed intact and accounted for','All lumens aspirated and flushed','Sutured and sterile dressing applied']})
+  ],
+  att:2,img:'Post-procedure imaging',
+  compl:['Arterial puncture','Haematoma or bleeding','Suspected pneumothorax','Arrhythmia during wire insertion','Failed access at this site','Air embolism','Other']},
+
+vascath:{name:'Vascath',group:'Vascular access',title:'Vascular catheter (Vas-Cath) insertion',
+  prep:PRE_INV,opprep:STERILE,anaes:ANAES,
+  ind:['Renal replacement therapy','Plasma exchange','Poor peripheral access for RRT'],indPh:'e.g. AKI with hyperkalaemia',
+  consReq:1,urgReq:1,
+  spec:[
+    F('site','Site','chip',{req:1,o:['Right IJV','Left IJV','Right subclavian','Left subclavian','Right femoral','Left femoral']}),
+    F('device','Catheter','chip',{o:['Double lumen vascath','Triple lumen vascath','Tunnelled dialysis catheter','Other']}),
+    F('size','Size and length','text',{w:'half',ph:'e.g. 13 Fr, 20 cm'}),
+    F('lot','Catheter lot number','text',{w:'half',ph:'e.g. AB12345'}),
+    F('guide','Guidance','chip',{o:['Real-time ultrasound','Landmark technique'],nm:GUIDE_NM}),
+    F('confirm','Venous placement confirmed by','multi',{o:['Ultrasound view of wire in vein','Pressure transduction','Blood gas']}),
+    F('checks','Checks on completion','multi',{all:1,o:['Guidewire removed intact and accounted for','Both lumens aspirate and flush freely','Sutured and sterile dressing applied']})
+  ],
+  att:2,img:'Post-procedure imaging',
+  compl:['Arterial puncture','Haematoma or bleeding','Suspected pneumothorax','Arrhythmia during wire insertion','Failed access at this site','Air embolism','Other']},
+
+art:{name:'Arterial line',group:'Vascular access',title:'Arterial line insertion',
+  prep:PRE_INV,prepHint:{'LocSSIP completed':'Covers Leadercath arterial lines only, not FlowSwitch'},
+  opprep:['Gloves and gown worn','Ultrasound probe cover applied'],anaes:ANAES,
+  ind:['Continuous blood pressure monitoring','Frequent arterial sampling'],indPh:'e.g. Vasopressor infusion',
+  urgReq:1,
+  spec:[
+    F('site','Site','chip',{req:1,o:['Radial','Femoral','Brachial','Other']}),
+    F('side','Side','chip',{o:RL}),
+    US(),
+    F('technique','Technique','chip',{o:['Seldinger','Direct puncture']}),
+    F('catheter','Catheter type and size','text',{w:'half',ph:'e.g. 20G Seldinger arterial catheter'}),
+    F('lot','Catheter lot number','text',{w:'half',ph:'e.g. AB12345'})
+  ],
+  att:2,post:['Flush and waveform confirmed','Dressing applied','Line function confirmed'],
+  compl:['Haematoma or bleeding','Arterial spasm or thrombosis','Infection','Nerve injury','Other']},
+
+ett:{name:'Intubation',group:'Airway',title:'Tracheal intubation',
+  prep:[ID,LOC],opprep:PPE,
+  indPh:'e.g. Hypoxaemic respiratory failure',urgReq:1,
+  spec:[
+    F('route','Route','chip',{o:['Oral','Nasal']}),
+    F('induction','Induction agent','text',{w:'half',ph:'e.g. Ketamine 100 mg'}),
+    F('nmb','NMB agent','text',{w:'half',ph:'e.g. Rocuronium 100 mg'}),
+    F('opiate','Opiate','text',{w:'half',ph:'e.g. Fentanyl 100 mcg'}),
+    F('vaso','Vasoactives','text',{w:'half',ph:'e.g. Noradrenaline infusion running'}),
+    F('drugs','Other drugs','text',{ph:'e.g. None'}),
+    F('device','Laryngoscopy','chip',{o:['Video laryngoscopy','Direct laryngoscopy','Fibre optic']}),
+    F('blade','Blade or VL shape and size','text',{w:'half',ph:'e.g. Macintosh 4'}),
+    F('size','Tube size (mm)','num',{w:'half',ph:'7.5'}),
+    F('vlview','VL % of glottic view','chip',{o:['100%','50%','0%']}),
+    F('dlgrade','DL grade of intubation','chip',{o:['1','2','3','4']}),
+    F('ease','Ease of intubation','chip',{o:['Easy','Difficult','Failed']}),
+    F('confirm','Confirmation of position','multi',{all:1,o:['ETCO2 present','Bilateral air entry']}),
+    F('depth','Length of tube to teeth (cm)','num',{w:'half',ph:'22'}),
+    F('secured','Secured with','chip',{w:'half',o:['Tapes','Ties','Anchorfast','Wired']})
+  ],
+  xs:[
+    {title:'Bag-valve-mask (BVM) ventilation',fields:[
+      F('bvm','BVM ventilation','multi',{o:['Easy','4-handed technique','Guedel airway used','Nasopharyngeal airway (NPA) used','Other']}),
+      F('bvmOther','BVM ventilation (other)','text',{when:['bvm','Other'],ph:'e.g. Two-person technique required'})
+    ]},
+    {title:'Intubation aids',fields:[
+      F('aid','Intubation aid','multi',{o:['Bougie','Steerable bougie','Stylet','Other']}),
+      F('aidOther','Intubation aid (other)','text',{when:['aid','Other'],ph:'e.g. Frova introducer'})
+    ]}
+  ],
+  att:1,img:'Post-procedure imaging',complL:'Adverse events',
+  compl:['Hypoxia (SpO2 below 90%)','Hypotension needing intervention','Oesophageal intubation, recognised','Aspiration','Dental or oral trauma','Cardiac arrest','Other']},
+
+trachi:{name:'Tracheostomy insertion',group:'Airway',title:'Tracheostomy insertion',
+  prep:PRE_INV.concat(['Optimal patient positioning']),opprep:STERILE,anaes:['Drugs and doses used during insertion','e.g. Propofol 100 mg, rocuronium 50 mg, fentanyl 100 mcg'],
+  indPh:'e.g. Prolonged ventilation, failed extubation',urgReq:1,
+  spec:[
+    F('technique','Technique','chip',{o:['Percutaneous','Surgical']}),
+    F('us','Ultrasound used (if applicable)','chip',{o:YN}),
+    F('dilator','Dilator or guidewire used (if applicable)','chip',{o:YN}),
+    F('tube','Tracheostomy tube type and size','text',{w:'half',ph:'e.g. Portex 8.0 cuffed'}),
+    F('lot','Tube lot number','text',{w:'half',ph:'e.g. AB12345'}),
+    F('site','Insertion site','chip',{o:['Midline','Other']}),
+    F('level','Level of trachea','text',{ph:'e.g. Between 2nd and 3rd tracheal rings'}),
+    F('airway','Airway during procedure','text',{ph:'e.g. 7.5 ETT withdrawn under bronchoscopic guidance'}),
+  ],
+  post:['Cuff inflated and secured','Ventilation confirmed','Oxygenation adequate','Tube position verified clinically'],img:'Chest X-ray (if indicated)',
+  compl:['Bleeding','Pneumothorax','Tracheal injury','Hypoxia or desaturation','Second operator required','Other']},
+
+trachc:{name:'Tracheostomy tube change',group:'Airway',title:'Tracheostomy tube change',
+  prep:[ID,LOC,ALG,EMG,'Recent airway assessment reviewed'],opprep:PPE,anaes:ANAES,
+  indPh:'e.g. Routine change, cuff leak',urgReq:1,
+  opL:'First operator',asL:'Second operator (airway trained)',
+  spec:[
+    F('tube','Tube type and size','text',{w:'half',ph:'e.g. Portex 8.0 cuffed'}),
+    F('lot','Tube lot number','text',{w:'half',ph:'e.g. AB12345'}),
+    F('method','Method','chip',{o:['Over guidewire','Direct replacement','Bougie','Other']}),
+    F('checks','During the procedure','multi',{all:1,o:['Suction applied before tube change','Airway patency confirmed during procedure']})
+  ],
+  post:['Cuff inflated and secured','Ventilation confirmed','Oxygenation adequate','Tube position verified clinically','Suctioning performed'],
+  compl:['Bleeding','Desaturation or hypoxia','Accidental decannulation','Tracheal injury','Other']},
+
+bronch:{name:'Bronchoscopy',group:'Airway',title:'Bronchoscopy',
+  prep:PRE_INV,opprep:PPE,anaes:ANAES,
+  ind:['Diagnostic','Therapeutic'],indPh:'e.g. Lobar collapse',
+  spec:[
+    F('reason','Suspected or reason','multi',{o:['Infection','Airway obstruction','Bleeding','Foreign body','Other']}),
+    F('type','Type','chip',{o:['Flexible','Rigid']}),
+    F('route','Route','chip',{o:['Oral','Nasal','Tracheostomy','Endotracheal tube']}),
+    F('checks','During the procedure','multi',{all:1,o:['Oxygen supplementation during procedure','Suction applied as needed']}),
+    F('samples','Performed','multi',{o:['Biopsies','Lavage','Brushings']}),
+    F('sent','Specimens labelled and sent','chip',{o:YN}),
+    F('findings','Findings','chip',{o:['Normal','Abnormal']}),
+    F('findText','Location and pathology','area',{ph:'e.g. Mucus plugging left lower lobe bronchus, cleared'})
+  ],
+  post:['Oxygenation and ventilation monitored','Recovery from sedation confirmed','Sample sent'],
+  compl:['Desaturation or hypoxia','Bleeding','Bronchospasm','Arrhythmia','Accidental extubation or displacement','Other']},
+
+icd:{name:'Chest drain',group:'Drains, taps and tubes',title:'Chest drain insertion',
+  prep:PRE_INV.concat(['Imaging reviewed (CXR, US or CT)']),opprep:STERILE,anaes:ANAES,
+  ind:['Pneumothorax','Haemothorax','Pleural effusion','Empyema'],indPh:'e.g. Tension pneumothorax',
+  consReq:1,urgReq:1,
+  spec:[
+    F('side','Side','chip',{req:1,o:RL}),
+    F('approach','Approach','chip',{o:['Anterior','Lateral','Posterior']}),
+    US(),
+    F('technique','Technique','chip',{o:['Seldinger','Open','Surgical']}),
+    F('catheter','Catheter type and size','text',{w:'half',ph:'e.g. 12 Fr Seldinger drain'}),
+    F('lot','Catheter lot number','text',{w:'half',ph:'e.g. AB12345'}),
+    F('suction','Suction applied','chip',{o:YN}),
+    F('system','Drainage system','chip',{o:['Underwater seal','Digital system','One-way valve']}),
+    F('fluid','Air or fluid on insertion','text',{ph:'e.g. 400 mL straw-coloured fluid'}),
+    F('samples','Fluid sent for analysis','multi',{o:['Biochemistry (protein, LDH, glucose, pH, amylase)','Cytology','MC&S','Other']}),
+    F('samplesOther','Fluid sent for analysis (other)','text',{when:['samples','Other'],ph:'e.g. Triglycerides'})
+  ],
+  att:2,post:['Drain secured (sutured)','Dressing applied','Drain patency confirmed'],
+  outx:[F('resp','Respiratory status','text',{ph:'e.g. Improved, SpO2 96% on 2 L oxygen'})],
+  img:'Chest X-ray',
+  compl:['Bleeding','Organ injury (lung, liver, spleen)','Malposition','Pneumothorax or subcutaneous emphysema','Second operator required','Other']},
+
+plt:{name:'Pleural tap',group:'Drains, taps and tubes',title:'Pleural tap (thoracentesis)',
+  prep:PRE_INV,opprep:STERILE,anaes:ANAES,
+  ind:['Diagnostic','Therapeutic'],indPh:'e.g. Undiagnosed unilateral effusion',
+  consReq:1,urgReq:1,
+  spec:[
+    F('cause','Effusion secondary to','multi',{o:['Infection','Malignancy','Heart failure','Other']}),
+    F('site','Site of tap','chip',{o:RL.concat(['Other'])}),
+    US(),
+    F('needle','Needle or catheter type and size','text',{w:'half',ph:'e.g. 14G cannula'}),
+    F('volume','Volume aspirated','text',{w:'half',ph:'e.g. 600 mL'}),
+    F('samples','Fluid sent for analysis','multi',{o:['Biochemistry (protein, LDH, glucose, pH, amylase)','Cytology','MC&S','Other']}),
+    F('samplesOther','Fluid sent for analysis (other)','text',{when:['samples','Other'],ph:'e.g. Triglycerides'})
+  ],
+  att:2,post:['Dressing applied','Oxygenation and respiratory status monitored'],
+  compl:['Bleeding or haematoma','Pneumothorax','Infection','Hypotension or vasovagal episode','Other']},
+
+asct:{name:'Ascitic tap',group:'Drains, taps and tubes',title:'Ascitic tap (paracentesis)',
+  prep:PRE_INV,opprep:STERILE,anaes:ANAES,
+  ind:['Diagnostic','Therapeutic'],indPh:'e.g. Suspected spontaneous bacterial peritonitis',
+  consReq:1,urgReq:1,
+  spec:[
+    F('cause','Ascites secondary to','multi',{o:['Cirrhosis','Malignancy','Infection','Other']}),
+    F('site','Site of tap','chip',{o:RLMO}),
+    US(),
+    F('needle','Needle or catheter type and size','text',{w:'half',ph:'e.g. 21G needle'}),
+    F('volume','Volume aspirated','text',{w:'half',ph:'e.g. 30 mL'}),
+    F('samples','Samples sent for','multi',{o:['Cell count','Biochemistry','Microbiology','Other']})
+  ],
+  att:2,post:['Dressing applied','Samples sent'],
+  compl:['Bleeding or haematoma','Bowel injury','Infection','Hypotension or vasovagal episode','Other']},
+
+ascd:{name:'Ascitic drain',group:'Drains, taps and tubes',title:'Ascitic drain insertion',
+  prep:PRE_INV,opprep:STERILE,anaes:ANAES,
+  ind:['Symptomatic relief','Malignant ascites','Refractory ascites'],indPh:'e.g. Tense ascites with respiratory compromise',
+  consReq:1,
+  spec:[
+    F('site','Site of drain','chip',{o:RLMO}),
+    US(),
+    F('catheter','Catheter type and size','text',{w:'half',ph:'e.g. 12 Fr pigtail drain'}),
+    F('lot','Catheter lot number','text',{w:'half',ph:'e.g. AB12345'}),
+    F('volume','Volume drained','text',{ph:'e.g. 2 L on insertion'})
+  ],
+  att:2,post:['Drain secured and dressing applied','Drain patency confirmed','Fluid sent for analysis (if indicated)'],
+  compl:['Bleeding or haematoma','Bowel perforation','Infection','Hypotension or vasovagal episode','Catheter malfunction or blockage','Other']},
+
+lp:{name:'Lumbar puncture',group:'Drains, taps and tubes',title:'Lumbar puncture',
+  prep:PRE_INV,opprep:STERILE,anaes:ANAES,
+  ind:['Diagnostic','Therapeutic'],indPh:'e.g. Suspected meningitis',
+  consReq:1,
+  spec:[
+    F('suspected','Suspected','multi',{o:['Infection','Raised ICP','Subarachnoid haemorrhage','Other']}),
+    F('position','Patient position','chip',{o:['Lateral decubitus','Sitting']}),
+    F('level','Level of puncture','text',{w:'half',ph:'e.g. L3 to L4'}),
+    F('needle','Needle type and size','text',{w:'half',ph:'e.g. 22G atraumatic needle'}),
+    F('samples','CSF collected for','multi',{o:['Cell count','Biochemistry (protein and glucose)','Microbiology (Gram stain and culture)','Viral PCR','Xanthochromia','Cytology','Other']}),
+    F('opening','Opening pressure measured','chip',{o:YN}),
+    F('pressure','Opening pressure (cmH2O)','num',{when:['opening','Yes'],ph:'18'}),
+    F('colour','Colour of CSF','text',{ph:'e.g. Clear and colourless'})
+  ],
+  att:2,post:['Patient monitored for complications','CSF sent to laboratory and labelled'],
+  outx:[F('bedrest','Bed rest advised','chip',{o:YN})],
+  compl:['Traumatic or bloody tap','Headache','Infection','Nerve root irritation','Other']},
+
+ng:{name:'NG tube',group:'Drains, taps and tubes',title:'NG tube insertion',
+  prep:[ID,LOC,ALG,EMG],opprep:PPE,
+  ind:['Gastric decompression','Enteral feeding','Medication administration'],indPh:'e.g. Enteral feeding after extubation',
+  urgReq:1,
+  spec:[
+    F('route','Route','chip',{o:['Right nostril','Left nostril','Oral route']}),
+    F('tube','Tube type and size','text',{w:'half',ph:'e.g. 12 Fr fine-bore NG tube'}),
+    F('lot','Tube lot number','text',{w:'half',ph:'e.g. AB12345'}),
+    F('tolerance','Patient tolerance and cooperation','chip',{o:['Good','Moderate','Poor']}),
+    F('confirm','Confirmation of tube placement','multi',{o:['Aspirate obtained','pH checked']}),
+    F('xray','X-ray confirmation performed','chip',{o:YN})
+  ],
+  att:2,post:['Tube secured and dressing applied','Tube function confirmed','Position rechecked'],
+  outx:[F('bridled','Tube bridled','chip',{o:YN})],
+  compl:['Epistaxis or nasal trauma','Misplacement into airway','Vomiting or gagging','Other']},
+
+sap:{name:'SAP or ESP block',group:'Regional anaesthesia',title:'Serratus anterior plane (SAP) or erector spinae plane (ESP) block',
+  prep:PRE_INV,opprep:STERILE,
+  ind:['Analgesia','Rib fractures','Perioperative pain management','Chronic pain'],indPh:'e.g. Right ribs 4 to 8 fractured',
+  spec:[
+    F('block','Block type','chip',{req:1,o:['SAP','ESP']}),
+    F('side','Side','chip',{o:['Right','Left','Bilateral']}),
+    F('level','Level or target site','text',{ph:'e.g. T5 to T6 for ESP, mid-axillary line for SAP'}),
+    US(),
+    F('needle','Needle type and length','text',{ph:'e.g. 100 mm block needle'}),
+    F('la','Local anaesthetic type','text',{w:'third',ph:'e.g. Levobupivacaine'}),
+    F('conc','Concentration','text',{w:'third',ph:'e.g. 0.25%'}),
+    F('vol','Volume','text',{w:'third',ph:'e.g. 20 mL'}),
+    F('catheter','Catheter placed (continuous infusion)','chip',{o:YN})
+  ],
+  att:2,post:['Analgesic effect assessed','Vital signs monitored'],
+  outx:[F('response','Patient response','text',{ph:'e.g. Pain score 8 to 3 at 30 minutes'})],
+  compl:['Vascular puncture or haematoma','Local anaesthetic systemic toxicity (LAST)','Pneumothorax','Nerve injury','Other']},
+
+fh:{name:'FUSIC Heart',group:'Ultrasound',title:'FUSIC Heart ultrasound',secT:'Scan details',gate:'acc',gateOk:['Yes','No, reviewed by named accredited provider'],
+  top:[
+    F('acc','FUSIC Heart accredited','chip',{req:1,o:['Yes','No','No, reviewed by named accredited provider'],hint:'Answer to continue'}),
+    F('revName','Accredited reviewer name','text',{req:1,w:'half',when:['acc','No, reviewed by named accredited provider'],ph:'e.g. Dr J Smith'}),
+    F('revRole','Reviewer grade and accreditation','text',{req:1,w:'half',when:['acc','No, reviewed by named accredited provider'],ph:'e.g. ICU consultant, FUSIC Heart accredited'}),
+    F('revHow','How reviewed','chip',{req:1,when:['acc','No, reviewed by named accredited provider'],o:['Present at bedside during scan','Repeated the scan','Reviewed saved images']}),
+    F('revTime','Date and time of review','text',{when:['acc','No, reviewed by named accredited provider'],ph:'e.g. 28/09/2026 14:30'}),
+    F('accWarn','Stop','info',{stop:1,when:['acc','No'],txt:'If appropriate accreditation is not held, findings should not be documented in the clinical notes or guide clinical decision making unless reviewed by a named accredited provider.'})
+  ],
+  prep:[ID],opprep:PPE,consentOpts:['Verbal consent','Best interests decision (lacked capacity)'],
+  ind:['Assessment of cardiac function','Shock','Pericardial effusion','Volume status'],indPh:'e.g. Undifferentiated hypotension',
+  spec:[
+    F('views','Views obtained','multi',{o:['PLAX','PSAX','Apical 4-chamber (AP4C)','Subcostal 4-chamber (SC4C)','IVC']}),
+    F('quality','Image quality','chip',{o:USQ}),
+    F('vent','Ventilatory support','chip',{o:VENT}),
+    F('hr','Heart rate (bpm)','num',{w:'third',ph:'e.g. 92'}),
+    F('bp','Blood pressure (mmHg)','text',{w:'third',ph:'e.g. 110/65'}),
+    F('cvp','CVP (mmHg)','text',{w:'third',ph:'e.g. 8'}),
+    F('cvSupport','Cardiovascular support','text',{ph:'e.g. Noradrenaline 0.1 mcg/kg/min'}),
+    F('machine','Machine used','text',{ph:'e.g. ICU machine 2'})
+  ],
+  xs:[
+    {title:'Findings',fields:[
+      F('lvDilated','LV dilated','chip',{o:YNU,hint:'FUSIC: LVIDd > 6cm in diastole'}),
+      F('lv','LV significantly impaired','chip',{o:YNU,hint:'FUSIC: reduced wall thickening and motion (global or regional, RWMA), MAPSE < 12mm'}),
+      F('rvDilated','RV dilated','chip',{o:YNU,hint:'FUSIC: RV area > 2/3 LV area; D-shaped septum or paradoxical septal motion'}),
+      F('rv','RV significantly impaired','chip',{o:YNU,hint:'FUSIC: TAPSE < 17mm, reduced RV wall motion'}),
+      F('ivc','Evidence of low preload','chip',{o:YNU,hint:'FUSIC: small collapsing IVC, small hyperdynamic LV and RV, papillary muscle apposition in systole'}),
+      F('pleural','Pleural fluid','chip',{o:YNU,hint:'FUSIC: pericardial or pleural fluid'}),
+      F('effusion','Pericardial effusion','chip',{o:['None','Present (small)','Present (moderate)','Present (large)'],hint:'FUSIC: pericardial or pleural fluid'}),
+      F('tamponade','Evidence of tamponade physiology','multi',{o:['RV diastolic collapse','RA systolic collapse','IVC plethora (dilated, minimal respiratory variation)','Swinging heart','Exaggerated respiratory variation in mitral or tricuspid inflow'],when:['effusion',['Present (small)','Present (moderate)','Present (large)']]})
+    ]},
+    {title:'Interpretation',fields:[
+      F('signif','Haemodynamic significance','chip',{o:['Stable','Shock','Tamponade suspected','Other']}),
+      F('urgent','Urgent findings communicated to consultant','chip',{o:['Yes','No','No urgent findings']}),
+      F('urgentWho','Consultant informed (name and time)','text',{when:['urgent','Yes'],ph:'e.g. Dr Smith, 02:15'}),
+      F('urgentWhy','Reason not communicated','text',{req:1,when:['urgent','No'],ph:'e.g. No consultant on site; discussed with ICU registrar, consultant to review at 08:00'})
+    ]}
+  ],
+  complL:'Complications or issues',postL:'Post-scan',post:['Findings communicated to clinical team','Formal echo requested'],
+  outx:[F('images','Images','chip',{o:['Saved and archived for review','Saved on machine only','Not saved (machine cannot store)','Not saved']})],
+  compl:['Patient intolerance or movement artefact','Poor image quality','Other']},
+
+fl:{name:'FUSIC Lung',group:'Ultrasound',title:'FUSIC Lung ultrasound',secT:'Scan details',gate:'acc',gateOk:['Yes','No, reviewed by named accredited provider'],
+  top:[
+    F('acc','FUSIC Lung accredited','chip',{req:1,o:['Yes','No','No, reviewed by named accredited provider'],hint:'Answer to continue'}),
+    F('revName','Accredited reviewer name','text',{req:1,w:'half',when:['acc','No, reviewed by named accredited provider'],ph:'e.g. Dr J Smith'}),
+    F('revRole','Reviewer grade and accreditation','text',{req:1,w:'half',when:['acc','No, reviewed by named accredited provider'],ph:'e.g. ICU consultant, FUSIC Heart accredited'}),
+    F('revHow','How reviewed','chip',{req:1,when:['acc','No, reviewed by named accredited provider'],o:['Present at bedside during scan','Repeated the scan','Reviewed saved images']}),
+    F('revTime','Date and time of review','text',{when:['acc','No, reviewed by named accredited provider'],ph:'e.g. 28/09/2026 14:30'}),
+    F('accWarn','Stop','info',{stop:1,when:['acc','No'],txt:'If appropriate accreditation is not held, findings should not be documented in the clinical notes or guide clinical decision making unless reviewed by a named accredited provider.'})
+  ],
+  prep:[ID],opprep:PPE,consentOpts:['Verbal consent','Best interests decision (lacked capacity)'],
+  indPh:'e.g. Acute hypoxia, query pneumothorax',
+  spec:[
+    F('vent','Ventilatory support','chip',{o:VENT}),
+    F('quality','Image quality','chip',{o:USQ}),
+    F('probe','Probe type and machine used','text',{ph:'e.g. Curvilinear probe, ward machine 2'}),
+    F('coop','Patient cooperation','chip',{o:['Good','Moderate','Poor']})
+  ],
+  xs:[
+    {title:'Findings by zone',fields:[
+      F('ru','Right upper anterior','multi',{o:['Normal','Reduced or absent lung sliding','B-lines (>2)','Consolidation','Pleural effusion','Other']}),
+      F('rl','Right lower anterior','multi',{o:['Normal','Reduced or absent lung sliding','B-lines (>2)','Consolidation','Pleural effusion','Other']}),
+      F('rpl','Right posterolateral','multi',{o:['Normal','Reduced or absent lung sliding','B-lines (>2)','Consolidation','Pleural effusion','Other']}),
+      F('lu','Left upper anterior','multi',{o:['Normal','Reduced or absent lung sliding','B-lines (>2)','Consolidation','Pleural effusion','Other']}),
+      F('ll','Left lower anterior','multi',{o:['Normal','Reduced or absent lung sliding','B-lines (>2)','Consolidation','Pleural effusion','Other']}),
+      F('lpl','Left posterolateral','multi',{o:['Normal','Reduced or absent lung sliding','B-lines (>2)','Consolidation','Pleural effusion','Other']})
+    ]},
+    {title:'Interpretation',fields:[
+      F('urgent','Urgent findings communicated to consultant','chip',{o:['Yes','No','No urgent findings']}),
+      F('urgentWho','Consultant informed (name and time)','text',{when:['urgent','Yes'],ph:'e.g. Dr Smith, 02:15'}),
+      F('urgentWhy','Reason not communicated','text',{req:1,when:['urgent','No'],ph:'e.g. No consultant on site; discussed with ICU registrar, consultant to review at 08:00'})
+    ]}
+  ],
+  complL:'Complications or issues',postL:'Post-scan',post:['Findings communicated to clinical team'],
+  outx:[F('images','Images','chip',{o:['Saved and archived for review','Saved on machine only','Not saved (machine cannot store)','Not saved']})],
+  compl:['Patient intolerance or movement artefact','Poor image quality','Other']},
+
+prone:{name:'Proning',group:'Positioning',title:'Proning procedure',
+  prep:[ID,LOC,'Sedation, analgesia and neuromuscular blockade status checked','Airway secured','Lines, drains and catheters secured','Pressure points padded',EMG,'Staff roles assigned'],opprep:['PPE worn','Team briefed on stepwise turning procedure'],
+  ind:['ARDS','Severe hypoxaemia','Pulmonary optimisation'],indPh:'e.g. P/F ratio below 13 kPa despite optimisation',
+  opL:'Operator or team lead',asL:'Assistants',
+  spec:[
+    F('pf','P/F ratio','text',{w:'third',ph:'e.g. 11 kPa'}),
+    F('fio2pre','FiO2 prior to procedure','text',{w:'third',ph:'e.g. 0.8'}),
+    F('before','Patient proned before','chip',{w:'third',o:YN}),
+    F('staff','Number of staff involved','num',{w:'half',ph:'5'}),
+    F('checks','Procedure','multi',{all:1,o:['Patient turned to prone position','Airway checked before, during and after turn']})
+  ],
+  post:['Patient position confirmed and documented','Monitoring re-established','Lines, drains, catheter and NGT checked','Pressure points re-assessed','Oxygenation and ventilation checked'],
+  outx:[
+    F('obs','Observations stable','chip',{o:YN}),
+    F('fio2post','FiO2 post proning','text',{ph:'e.g. 0.6'}),
+    F('suction','Able to pass suction catheter','chip',{o:YN})
+  ],
+  complL:'Complications or issues',
+  compl:['Airway displacement or ET tube movement','Haemodynamic instability (hypotension, arrhythmia)','Line or catheter dislodgement','Pressure injury or skin trauma','Other']},
+
+sup:{name:'Supination',group:'Positioning',title:'Supination procedure',
+  prep:[ID,LOC,'Sedation, analgesia and neuromuscular blockade status checked','Airway secured','Lines, drains and catheters secured','Pressure points padded',EMG,'Staff roles assigned'],opprep:['PPE worn','Team briefed on stepwise turning procedure'],
+  ind:['End of proning session','Clinical reassessment','Procedures or interventions'],indPh:'e.g. 16 hours proned, improved oxygenation',
+  opL:'Operator or team lead',asL:'Assistants',
+  spec:[
+    F('hours','Hours patient has been proned for','num',{w:'half',ph:'16'}),
+    F('fio2pre','FiO2 prior to procedure','text',{w:'half',ph:'e.g. 0.6'}),
+    F('staff','Number of staff involved','num',{w:'half',ph:'5'}),
+    F('checks','Procedure','multi',{all:1,o:['Patient returned to supine position','Airway checked before, during and after turn']})
+  ],
+  post:['Patient position confirmed and documented','Lines, drains, catheter and NGT checked','Pressure points re-assessed','Oxygenation and ventilation checked'],
+  outx:[
+    F('obs','Observations stable','chip',{o:YN}),
+    F('fio2post','FiO2 post procedure','text',{ph:'e.g. 0.5'})
+  ],
+  complL:'Complications or issues',
+  compl:['Airway displacement or ET tube movement','Haemodynamic instability (hypotension, arrhythmia)','Line or catheter dislodgement','Pressure injury or skin trauma','Other']},
+
+oth:{name:'Other',group:'Other',title:'Procedure',
+  prep:[ID,LOC],
+  indPh:'Reason for the procedure',
+  spec:[
+    F('name','Procedure name','text',{req:1,ph:'e.g. Bladder catheterisation'}),
+    F('site','Site or side','text',{ph:'Where it was performed'}),
+    F('tech','Technique and findings','area',{ph:'Brief description of what was done and found'})
+  ],
+  att:1,compl:['Bleeding','Failed procedure','Other']}
+};
+var ORDER=['cvc','vascath','art','ett','trachi','trachc','bronch','icd','plt','asct','ascd','lp','ng','sap','fh','fl','prone','sup','oth'];
+var GROUPS=[];
+ORDER.forEach(function(id){var g=PR[id].group,last=GROUPS[GROUPS.length-1];if(last&&last.name===g)last.ids.push(id);else GROUPS.push({name:g,ids:[id]})});
+
+/* ---------- section builder ---------- */
+function sections(p){
+  var C=PR[p],secs=[];
+  var own=function(a){return (a||[]).map(function(f){
+    var c={};for(var i in f)c[i]=f[i];
+    c.sk=f.k;c.k=p+'.'+f.k;
+    if(f.when)c.when=[p+'.'+f.when[0],f.when[1]];
+    return c;
+  })};
+  var who=[
+    F('date','Date','date',{w:'third'}),
+    F('time','Time','time',{w:'third'}),
+    F('grade','Operator grade','sel',{w:'third',o:GRADES}),
+    F('operator',C.opL||'Operator','text',{req:1,w:'half',ph:'Name'}),
+    F('assistant',C.asL||'Assistant','text',{w:'half',ph:'Name (optional)'}),
+    F('supervisor','Supervisor','text',{w:'half',ph:'Leave blank if unsupervised'}),
+    F('supervision','Level of supervision','chip',{o:SUPERV})
+  ];
+  if(C.ind&&C.ind.length){
+    who.push(F(p+'.indication','Indication','multi',{req:1,alt:p+'.indText',o:C.ind}));
+    who.push(F(p+'.indText','Other or additional detail','text',{ph:C.indPh}));
+  }else{
+    who.push(F(p+'.indText','Indication','text',{req:1,ph:C.indPh}));
+  }
+  who.push(F('consent','Consent','chip',{req:!!C.consReq,o:C.consentOpts||CONSENT}));
+  if(C.top)secs.push({id:'top',title:'Accreditation',fields:own(C.top)});
+  secs.push({id:'who',title:'Operator, indication and consent',fields:who});
+  secs.push({id:'urg',title:'Urgency',fields:[F(p+'.urgency','Elective or emergent','chip',{req:!!C.urgReq,o:['Elective','Emergent']})]});
+  var prep=[F(p+'.prep','Pre-procedure checks','multi',{all:1,o:C.prep,optHint:C.prepHint})];
+  if(C.opprep)prep.push(F(p+'.opprep','Operator preparation','multi',{all:1,o:C.opprep}));
+  if(C.opprep===STERILE){
+    prep.push(F(p+'.skinPrep','Skin preparation','chip',{o:['2% chlorhexidine','Other']}));
+    prep.push(F(p+'.skinPrepOther','Skin preparation (other)','text',{when:[p+'.skinPrep','Other'],ph:'e.g. Povidone-iodine'}));
+  }
+  if(C.anaes)prep.push(F(p+'.anaes',C.anaes[0],'text',{ph:C.anaes[1]}));
+  secs.push({id:'prep',title:'Preparation',fields:prep});
+  secs.push({id:'proc',title:C.secT||C.name,fields:own(C.spec)});
+  (C.xs||[]).forEach(function(x,i){
+    var fs=own(x.fields);
+    if(C.gate)fs.forEach(function(f){if(!f.when)f.when=[p+'.'+C.gate,C.gateOk||'Yes']});
+    secs.push({id:'x'+i,title:x.title,fields:fs});
+  });
+  var out=[];
+  if(C.att)out.push(F(p+'.attempts','Attempts (this operator)','chip',{req:C.att===2,o:['1','2','3','More than 3']}));
+  if(C.post)out.push(F(p+'.post',C.postL||'Post-procedure','multi',{all:1,o:C.post,when:C.gate?[p+'.'+C.gate,C.gateOk||'Yes']:undefined}));
+  own(C.outx).forEach(function(f){out.push(f)});
+  if(C.img)out.push(F(p+'.imaging',C.img,'chip',{o:IMG}));
+  out.push(F(p+'.complStatus',C.complL||'Complications','chip',{req:1,hint:'(please note complications in comments section below)',o:['None','Yes']}));
+  out.push(F(p+'.complD','Which complications','multi',{o:C.compl,when:[p+'.complStatus','Yes']}));
+  out.push(F(p+'.complText','Details and action taken','text',{when:[p+'.complStatus','Yes']}));
+  out.push(F(p+'.comments','Comments and plan','area',{ph:'e.g. No further actions required'}));
+  secs.push({id:'out',title:'Outcome',fields:out});
+  if(C.gate)secs.forEach(function(sc){if(sc.id==='top')return;sc.fields.forEach(function(f){if(!f.when)f.when=[p+'.'+C.gate,C.gateOk||'Yes']})});
+  return secs;
+}
+
+/* ---------- state ---------- */
+var proc='cvc',mode='structured',V={},SECS=[],FMAP={};
+function nowParts(){
+  var d=new Date(),z=function(n){return String(n).padStart(2,'0')};
+  return {date:d.getFullYear()+'-'+z(d.getMonth()+1)+'-'+z(d.getDate()),time:z(d.getHours())+':'+z(d.getMinutes())};
+}
+function freshState(keep){
+  var n=nowParts(),k=keep||{};
+  V={date:n.date,time:n.time,operator:k.operator||'',grade:k.grade||''};
+}
+function build(){
+  SECS=sections(proc);FMAP={};
+  SECS.forEach(function(s){s.fields.forEach(function(f){FMAP[f.k]=f})});
+}
+function vis(f){
+  if(!f.when)return true;
+  var v=getv(f.when[0]),want=f.when[1];
+  if(Array.isArray(v))return Array.isArray(want)?want.some(function(w){return v.indexOf(w)>=0}):v.indexOf(want)>=0;
+  return Array.isArray(want)?want.indexOf(v)>=0:v===want;
+}
+function getv(k){
+  var f=FMAP[k];if(!f||!vis(f))return undefined;
+  if(f.t==='info')return f.txt;
+  var v=V[k];
+  if(f.t==='multi'){var a=Array.isArray(v)?v:[];return f.o.filter(function(o){return a.indexOf(o)>=0})}
+  if(f.t==='chip')return f.o.indexOf(v)>=0?v:undefined;
+  return v===undefined?'':String(v).trim();
+}
+
+/* ---------- rendering ---------- */
+function renderPicker(){
+  $('#picker').innerHTML=GROUPS.map(function(g){
+    return '<div class="pgroup" role="group" aria-label="'+esc(g.name)+'"><div class="plabel">'+esc(g.name)+'</div><div class="pbtns">'+
+      g.ids.map(function(id){
+        return '<button type="button" class="pick" id="pick-'+id+'" data-p="'+id+'" aria-pressed="'+(id===proc)+'">'+esc(PR[id].name)+'</button>';
+      }).join('')+'</div></div>';
+  }).join('');
+}
+function fieldEl(fd){
+  var id='f-'+fd.k.replace(/\./g,'-'),w=document.createElement('div'),v=V[fd.k],h='';
+  w.className='fld w-'+(fd.w||'full');w.dataset.k=fd.k;
+  if(fd.t==='text'||fd.t==='num'||fd.t==='date'||fd.t==='time'){
+    var type=fd.t==='num'?'number':fd.t;
+    h='<label for="'+id+'">'+esc(fd.l)+'</label><input id="'+id+'" data-k="'+fd.k+'" type="'+type+'"'+(fd.t==='num'?' inputmode="decimal" step="any" min="0"':'')+' placeholder="'+esc(fd.ph||'')+'" value="'+esc(v||'')+'">';
+  }else if(fd.t==='info'){
+    h=fd.stop?'<div class="stopbox" role="alert"><div class="stoptitle">Do not continue</div><p>'+esc(fd.txt)+'</p><p class="stopsub">This form cannot be completed. Change the answer above only if accreditation is held, or if a named accredited provider has reviewed the findings.</p></div>'
+      :'<div class="info" role="alert"><strong>'+esc(fd.l)+':</strong> '+esc(fd.txt)+'</div>';
+  }else if(fd.t==='area'){
+    h='<label for="'+id+'">'+esc(fd.l)+'</label><textarea id="'+id+'" data-k="'+fd.k+'" rows="3" placeholder="'+esc(fd.ph||'')+'">'+esc(v||'')+'</textarea>';
+  }else if(fd.t==='sel'){
+    h='<label for="'+id+'">'+esc(fd.l)+'</label><select id="'+id+'" data-k="'+fd.k+'"><option value="">Select</option>'+fd.o.map(function(o){return '<option'+(v===o?' selected':'')+'>'+esc(o)+'</option>'}).join('')+'</select>';
+  }else if(fd.t==='chip'||fd.t==='multi'){
+    var sel=fd.t==='multi'?(v||[]):[v];
+    h='<div class="lblrow"><span class="lbl" id="l-'+id+'">'+esc(fd.l)+(fd.hint?' <span class="hint">'+esc(fd.hint)+'</span>':'')+'</span>'+(fd.all?'<button type="button" class="linkbtn" data-all="'+fd.k+'">Tick all</button>':'')+'</div>'+
+      '<div class="chips" role="group" aria-labelledby="l-'+id+'">'+fd.o.map(function(o,i){
+        return '<button type="button" class="chip" id="'+id+'-'+i+'" data-k="'+fd.k+'" data-i="'+i+'" aria-pressed="'+(sel.indexOf(o)>=0)+'">'+esc(o)+'</button>'+((fd.optHint&&fd.optHint[o])?'<span class="hint opt-hint">'+esc(fd.optHint[o])+'</span>':'');
+      }).join('')+'</div>';
+  }
+  w.innerHTML=h;return w;
+}
+function renderForm(){
+  var form=$('#form');form.innerHTML='';
+  SECS.forEach(function(s){
+    var sec=document.createElement('section');sec.className='sec';
+    sec.innerHTML='<h2>'+esc(s.title)+'</h2>';
+    var g=document.createElement('div');g.className='grid';
+    s.fields.forEach(function(f){g.appendChild(fieldEl(f))});
+    sec.appendChild(g);form.appendChild(sec);
+  });
+}
+function syncChips(k){
+  var f=FMAP[k],v=V[k];
+  document.querySelectorAll('.chip[data-k="'+k+'"]').forEach(function(b){
+    var o=f.o[+b.dataset.i];
+    b.setAttribute('aria-pressed',f.t==='multi'?(v||[]).indexOf(o)>=0:v===o);
+  });
+}
+function syncVis(){
+  document.querySelectorAll('.fld').forEach(function(el){
+    var f=FMAP[el.dataset.k];el.hidden=!!(f&&!vis(f));
+  });
+  document.querySelectorAll('#form .sec').forEach(function(sec){
+    var all=sec.querySelectorAll('.fld'),vis_=sec.querySelectorAll('.fld:not([hidden])');
+    sec.hidden=all.length>0&&vis_.length===0;
+  });
+}
+
+/* ---------- output ---------- */
+function dt(){
+  var p=(V.date||'').split('-'),d=p.length===3?p[2]+'/'+p[1]+'/'+p[0]:'';
+  return [d,V.time||''].filter(Boolean).join(' ');
+}
+function structured(){
+  var out=[],any=false;
+  SECS.forEach(function(s){
+    var it=[];
+    s.fields.forEach(function(f){
+      if(f.t==='date'||f.t==='time')return;
+      var v=getv(f.k);if(!has(v))return;
+      it.push(f.l+': '+(f.t==='multi'?v.join('; '):v));
+    });
+    if(it.length){any=true;out.push('',s.title.toUpperCase(),it.join('\n'))}
+  });
+  if(!any)return '';
+  return ['ICU PROCEDURE NOTE','Procedure: '+PR[proc].title,'Date and time: '+dt()].concat(out).join('\n');
+}
+
+function cvcLead(defaultName){
+  return function(q,nm){
+    var dev=q('device'),dn=(!dev||dev==='Other')?defaultName:low(dev),size=q('size'),s=[];
+    s.push(art(dn)+' '+dn+(size?' ('+size+')':'')+' was inserted'+(q('site')?' into the '+low(q('site')):'')+(q('guide')?' using '+nm('guide'):''));
+    var cf=(q('confirm')||[]).map(low);if(cf.length)s.push('Venous placement confirmed by '+list(cf));
+    return {s:s,used:['device','size','site','guide','confirm']};
+  };
+}
+var LEAD={
+  cvc:cvcLead('central venous catheter'),
+  vascath:cvcLead('vascular catheter (Vas-Cath)'),
+  art:function(q){
+    var where=[q('side'),q('site')!=='Other'&&q('site')].filter(Boolean).map(low).join(' ');
+    return {s:['An arterial line was inserted'+(where?' into the '+where+' artery':'')],used:['side','site']};
+  },
+  ett:function(q){
+    var s=[],r=q('route');
+    s.push(r?r+' tracheal intubation':'Tracheal intubation');
+    var d=[['induction agent','induction'],['NMB agent','nmb'],['opiate','opiate'],['vasoactives','vaso'],['other drugs','drugs']]
+      .filter(function(x){return q(x[1])}).map(function(x){return x[0]+' '+q(x[1])});
+    if(d.length)s.push('Drugs: '+d.join('; '));
+    var dev=q('device'),bl=q('blade');
+    if(dev||bl)s.push('Laryngoscopy: '+[dev?low(dev):'',bl?'('+bl+')':''].filter(Boolean).join(' '));
+    if(q('vlview'))s.push('VL glottic view '+q('vlview'));
+    if(q('dlgrade'))s.push('DL grade '+q('dlgrade'));
+    if(q('ease'))s.push('Ease of intubation: '+low(q('ease')));
+    var t=[q('size')?q('size')+' mm':'',q('depth')?q('depth')+' cm at the teeth':''].filter(Boolean);
+    if(t.length)s.push('Tracheal tube: '+t.join(', '));
+    var cn=(q('confirm')||[]).map(low);if(cn.length)s.push('Position confirmed by '+list(cn));
+    if(q('secured'))s.push('Secured with '+low(q('secured')));
+    return {s:s,used:['route','induction','nmb','opiate','vaso','drugs','device','blade','vlview','dlgrade','ease','size','depth','confirm','secured']};
+  },
+  icd:function(q){
+    var cat=q('catheter'),a=q('approach'),t=q('technique');
+    return {s:['A chest drain'+(cat?' ('+cat+')':'')+' was inserted'+(q('side')?' on the '+low(q('side'))+' side':'')+
+      (a?' via '+aa(low(a))+' approach':'')+(t?' using '+aa(low(t))+' technique':'')],used:['catheter','side','approach','technique']};
+  },
+  sap:function(q){
+    var b=q('block'),sd=q('side'),lv=q('level');
+    var s=[(b?b+' block':'Block')+' performed'+(sd==='Bilateral'?' bilaterally':(sd?' on the '+low(sd)+' side':''))+(lv?' at '+lv:'')];
+    var la=[q('la'),q('conc'),q('vol')].filter(Boolean).join(' ');
+    if(la)s.push('Local anaesthetic: '+la);
+    return {s:s,used:['block','side','level','la','conc','vol']};
+  }
+};
+
+function narrative(){
+  var C=PR[proc];
+  var q=function(k){return getv(proc+'.'+k)};
+  var nm=function(k){var f=FMAP[proc+'.'+k],v=q(k);return v&&f&&f.nm?f.nm[v]:v};
+  var paras=[];
+  var op=getv('operator'),gr=getv('grade'),as=getv('assistant'),sv=getv('supervisor'),sl=getv('supervision'),co=getv('consent');
+  var w=[];
+  if(op)w.push((C.opL?C.opL+': ':'Performed by ')+op+(gr?' ('+low(gr)+')':''));
+  else if(gr)w.push('Operator grade: '+low(gr));
+  if(as)w.push(C.asL?C.asL+': '+as:'Assisted by '+as);
+  if(sv)w.push('Supervised by '+sv);
+  if(sl)w.push('Level of supervision: '+low(sl));
+  var ind=(q('indication')||[]).map(low),it=q('indText');
+  var indStr=[ind.length?list(ind):'',it].filter(Boolean).join('; ');
+  if(indStr)w.push('Indication: '+indStr);
+  if(q('urgency'))w.push('Urgency: '+low(q('urgency')));
+  if(co)w.push('Consent: '+low(co));
+  var p1=sentences(w);if(p1)paras.push(p1);
+  if(C.top){
+    var tw=[];
+    SECS.filter(function(s){return s.id==='top'})[0].fields.forEach(function(f){
+      var v=getv(f.k);if(!has(v))return;
+      tw.push(f.t==='info'?f.txt.replace(/\.$/,''):f.l+': '+(f.t==='chip'?low(v):v));
+    });
+    var pt=sentences(tw);if(pt)paras.unshift(pt);
+  }
+
+  var pre=(q('prep')||[]).map(low),opp=(q('opprep')||[]).map(low);
+  var skinV=q('skinPrep'),skinTxt=skinV==='Other'?q('skinPrepOther'):(skinV?low(skinV):'');
+  var p2=sentences([
+    pre.length&&'Pre-procedure checks: '+list(pre),
+    opp.length&&'Operator preparation: '+list(opp),
+    skinTxt&&'Skin preparation: '+skinTxt,
+    C.anaes&&q('anaes')&&C.anaes[0]+': '+q('anaes')
+  ]);
+  if(p2)paras.push(p2);
+
+  var pf=[];
+  SECS.forEach(function(s){if(s.id==='proc'||/^x\d/.test(s.id))s.fields.forEach(function(f){pf.push(f)})});
+  var anySpec=pf.some(function(f){return has(getv(f.k))});
+  if(anySpec){
+    var lead=LEAD[proc]?LEAD[proc](q,nm):{s:[],used:[]},s=lead.s.slice();
+    pf.forEach(function(f){
+      if(lead.used.indexOf(f.sk)>=0)return;
+      var v=getv(f.k);if(!has(v))return;
+      s.push(f.l+': '+(f.t==='multi'?list(v.map(low)):f.t==='chip'?low(v):v));
+    });
+    var p3=sentences(s);if(p3)paras.push(p3);
+  }
+
+  var of=SECS.filter(function(s){return s.id==='out'})[0].fields,os=[];
+  of.forEach(function(f){
+    if(/complStatus|complD|complText|comments/.test(f.k.split('.')[1]))return;
+    var v=getv(f.k);if(!has(v))return;
+    os.push(f.l+': '+(f.t==='multi'?list(v.map(low)):f.t==='chip'?low(v):v));
+  });
+  var cs=q('complStatus'),cd=(q('complD')||[]).map(low),ct=q('complText'),cl=C.complL||'Complications';
+  if(cs==='None')os.push(cl+': none');
+  else if(cs==='Yes')os.push(cl+': '+(cd.length?list(cd):'yes')+(ct?'. Details: '+ct:''));
+  var p4=sentences(os);if(p4)paras.push(p4);
+  if(q('comments'))paras.push('Comments and plan: '+q('comments'));
+
+  if(!paras.length)return '';
+  var title=(proc==='oth'&&q('name'))?q('name'):C.title;
+  return ['ICU procedure note: '+title+', '+dt()].concat(paras).join('\n\n');
+}
+
+function refresh(){
+  syncVis();
+  var C=PR[proc],locked=C.gate&&getv(proc+'.'+C.gate)==='No';
+  var txt=locked?'':(mode==='narrative'?narrative():structured());
+  if(txt&&V._ex)txt='EXAMPLE ONLY, NOT A REAL PROCEDURE\n\n'+txt;
+  $('#note').value=txt;
+  $('#copy').disabled=!txt;
+  var miss=[];
+  SECS.forEach(function(s){s.fields.forEach(function(f){
+    if(f.req&&vis(f)&&!has(getv(f.k))&&!(f.alt&&has(getv(f.alt))))miss.push(f.l);
+  })});
+  var g=$('#gaps');
+  $('#note').placeholder=locked?'No note generated. Accreditation not held.':($('#note').dataset.ph||($('#note').dataset.ph=$('#note').placeholder));
+  if(locked){g.className='gaps';g.textContent='Form locked: accreditation not held. No note generated.';return}
+  if(C.gate&&(C.gateOk||['Yes']).indexOf(getv(proc+'.'+C.gate))<0){g.className='gaps';g.textContent='Confirm accreditation to continue';return}
+  if(miss.length){g.className='gaps';g.textContent='Still to record: '+miss.join(', ')}
+  else{g.className='gaps done';g.textContent='All key fields recorded'}
+}
+
+/* ---------- events ---------- */
+var form=$('#form');
+form.addEventListener('input',function(e){
+  var t=e.target,k=t.dataset&&t.dataset.k;
+  if(!k||t.type==='checkbox')return;
+  V[k]=t.value;refresh();
+});
+form.addEventListener('change',function(e){
+  var t=e.target,k=t.dataset&&t.dataset.k;
+  if(!k)return;
+  if(t.tagName==='SELECT'){V[k]=t.value;refresh()}
+});
+form.addEventListener('click',function(e){
+  var b=e.target.closest('button');if(!b)return;
+  if(b.dataset.all){
+    var f=FMAP[b.dataset.all],c=V[f.k]||[];
+    V[f.k]=c.length===f.o.length?[]:f.o.slice();
+    syncChips(f.k);refresh();return;
+  }
+  if(b.classList.contains('chip')){
+    var fd=FMAP[b.dataset.k],o=fd.o[+b.dataset.i];
+    if(fd.t==='multi'){
+      var a=(V[fd.k]||[]).slice(),ix=a.indexOf(o);
+      if(ix>=0)a.splice(ix,1);else a.push(o);
+      V[fd.k]=a;
+    }else V[fd.k]=V[fd.k]===o?'':o;
+    syncChips(fd.k);refresh();
+  }
+});
+$('#picker').addEventListener('click',function(e){
+  var b=e.target.closest('.pick');if(!b||b.dataset.p===proc)return;
+  proc=b.dataset.p;build();renderPicker();renderForm();refresh();
+});
+$('#modes').addEventListener('click',function(e){
+  var b=e.target.closest('button');if(!b)return;
+  mode=b.dataset.m;
+  document.querySelectorAll('#modes button').forEach(function(x){x.setAttribute('aria-checked',x===b)});
+  refresh();
+});
+
+var status=$('#status'),statusTimer;
+function say(m){status.textContent=m;clearTimeout(statusTimer);statusTimer=setTimeout(function(){status.textContent=''},4000)}
+$('#copy').addEventListener('click',function(){
+  var ta=$('#note');if(!ta.value)return;
+  var fallback=function(){
+    ta.focus();ta.select();
+    var ok=false;try{ok=document.execCommand('copy')}catch(_){}
+    say(ok?'Copied. Paste it into the patient record.':'Text selected. Press Ctrl+C (or Cmd+C) to copy.');
+  };
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(ta.value).then(function(){say('Copied. Paste it into the patient record.')},fallback);
+  }else fallback();
+});
+var resetArmed=false,resetTimer;
+$('#reset').addEventListener('click',function(){
+  var b=$('#reset');
+  if(!resetArmed){resetArmed=true;b.textContent='Click again to clear';resetTimer=setTimeout(function(){resetArmed=false;b.textContent='New note'},3500);return}
+  clearTimeout(resetTimer);resetArmed=false;b.textContent='New note';
+  freshState({operator:V.operator,grade:V.grade});
+  build();renderForm();refresh();say('Form cleared. Operator details kept.');
+});
+
+/* example: fills every field with a sample taken from its placeholder or first options */
+$('#example').addEventListener('click',function(){
+  freshState();
+  V.operator='Dr A Example';V.grade='ST6 or above';V.assistant='B Example';V.supervisor='Dr C Example';V.supervision=SUPERV[0];V.consent=CONSENT[0];V._ex=true;
+  SECS.forEach(function(s){s.fields.forEach(function(f){
+    if(f.k in V||f.t==='date'||f.t==='time'||f.t==='sel'||f.t==='info')return;
+    if(!vis(f))return;
+    if(f.t==='chip')V[f.k]=f.o[0];
+    else if(f.t==='multi')V[f.k]=f.all?f.o.slice():f.o.slice(0,2);
+    else V[f.k]=(f.ph||'Example').replace(/^e\.g\.\s*/,'');
+  })});
+  renderForm();refresh();say('Example loaded. Choose New note before recording a real procedure.');
+});
+
+freshState();build();renderPicker();renderForm();refresh();
+})();
+</script>
+
+</body></html>
